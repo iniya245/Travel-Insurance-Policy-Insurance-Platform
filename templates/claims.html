@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Claims</title>
+</head>
+<body>
+
+<h2>All Insurance Claims</h2>
+
+<table border="1">
+<tr>
+    <th>ID</th>
+    <th>Policy ID</th>
+    <th>Claim Reason</th>
+</tr>
+
+{% for claim in claims %}
+<tr>
+    <td>{{ claim[0] }}</td>
+    <td>{{ claim[1] }}</td>
+    <td>{{ claim[2] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<br>
+<a href="/admin_dashboard">Back to Admin Dashboard</a>
+
+</body>
+</html>
