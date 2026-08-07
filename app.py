@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
+app.secret_key = "travelinsurance123"
 
 DATABASE = "travel_insurance.db"
 
@@ -44,10 +45,10 @@ def login():
 
     if request.method == "POST":
 
-        email = request.form.get("email")
-        password = request.form.get("password")
+        email = request.form["email"]
+        password = request.form["password"]
 
-        conn = sqlite3.connect(DATABASE)
+        conn = sqlite3.connect("travel_insurance.db")
         cursor = conn.cursor()
 
         cursor.execute(
@@ -56,10 +57,12 @@ def login():
         )
 
         user = cursor.fetchone()
+        print(user)
 
         conn.close()
 
         if user:
+            session["user"] = email
             return render_template("dashboard.html")
         else:
             return "Login Failed"
@@ -114,8 +117,14 @@ def renewal():
         return "Policy Renewal Request Submitted Successfully"
 
     return render_template("renewal.html")
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("login"))
 @app.route("/dashboard")
 def dashboard():
+    if "user" not in session:
+        return redirect(url_for("login"))
     return render_template("dashboard.html")
 @app.route('/admin_login', methods=['GET','POST'])
 def admin_login():
@@ -159,8 +168,5 @@ def claims():
 
     conn.close()
     return render_template("claims.html", claims=claims)
-@app.route('/logout')
-def logout():
-    return render_template("login.html")
 if __name__ == "__main__":
     app.run(debug=True)
