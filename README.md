@@ -33,3 +33,4 @@ The Travel Insurance Policy Issuance Platform is a web application developed usi
 
 ## Project Status
 Review 1 - Version 1 Completed
+updated for Review 1
