@@ -7,3 +7,4 @@ Many travelers still purchase travel insurance through manual paperwork, which i
 This project aims to develop a Travel Insurance Policy Issuance Platform using Python Flask and SQLite. The system allows users to register, log in, apply for travel insurance, view their policies, submit insurance claims, and request policy renewal. An admin can manage users and insurance-related information through the admin dashboard.
 
 The main objective of this project is to provide a simple, secure, and paperless travel insurance management system.
+updated for Review 1
