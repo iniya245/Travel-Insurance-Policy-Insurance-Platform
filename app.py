@@ -77,6 +77,9 @@ def apply_policy():
         name = request.form.get("name")
         destination = request.form.get("destination")
         travel_date = request.form.get("travel_date")
+        days = int(request.form.get("days"))
+
+        premium = days * 100
 
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
@@ -89,7 +92,16 @@ def apply_policy():
         conn.commit()
         conn.close()
 
-        return render_template("dashboard.html")
+        return f"""
+        <h2>Policy Applied Successfully</h2>
+        <p>Name: {name}</p>
+        <p>Destination: {destination}</p>
+        <p>Travel Date: {travel_date}</p>
+        <p>Duration: {days} Days</p>
+        <p>Premium Amount: ₹{premium}</p>
+        <br>
+        <a href="/dashboard">Back to Dashboard</a>
+        """
 
     return render_template("apply_policy.html")
 @app.route("/view_policies")
@@ -104,8 +116,27 @@ def view_policies():
     conn.close()
 
     return render_template("view_policies.html", policies=policies)
-@app.route("/claim")
+@app.route("/claim", methods=["GET", "POST"])
 def claim():
+
+    if request.method == "POST":
+
+        policy_id = request.form.get("policy_id")
+        claim_reason = request.form.get("claim_reason")
+
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO claims (policy_id, claim_reason, claim_status) VALUES (?, ?, ?)",
+            (policy_id, claim_reason, "Pending")
+        )
+
+        conn.commit()
+        conn.close()
+
+        return "Claim Request Submitted Successfully"
+
     return render_template("claim.html")
 @app.route('/renewal', methods=['GET','POST'])
 def renewal():
@@ -126,16 +157,16 @@ def dashboard():
     if "user" not in session:
         return redirect(url_for("login"))
     return render_template("dashboard.html")
-@app.route('/admin_login', methods=['GET','POST'])
+@app.route('/admin_login', methods=['GET', 'POST'])
 def admin_login():
 
     if request.method == "POST":
 
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get("username")
+        password = request.form.get("password")
 
         if username == "admin" and password == "admin123":
-            return render_template("admin_dashboard.html")
+            return redirect(url_for("admin_dashboard"))
 
         else:
             return "Invalid Admin Login"

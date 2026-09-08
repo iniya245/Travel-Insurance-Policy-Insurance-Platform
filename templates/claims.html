@@ -1,31 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>All Claims</title>
+    <title>Claim Insurance</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef4ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .box {
+            background: white;
+            width: 450px;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            color: #0b3d91;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background: #0b3d91;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>All Insurance Claims</h2>
+<div class="box">
 
-<table border="1">
-<tr>
-    <th>ID</th>
-    <th>Policy ID</th>
-    <th>Claim Reason</th>
-</tr>
+    <h2>Claim Insurance</h2>
 
-{% for claim in claims %}
-<tr>
-    <td>{{ claim[0] }}</td>
-    <td>{{ claim[1] }}</td>
-    <td>{{ claim[2] }}</td>
-</tr>
-{% endfor %}
+    <form action="/claim" method="POST">
 
-</table>
+        <label>Policy ID</label>
+        <input type="text" name="policy_id" required>
 
-<br>
-<a href="/admin_dashboard">Back to Admin Dashboard</a>
+        <label>Claim Reason</label>
+        <textarea name="claim_reason" rows="4"
+                  placeholder="Enter your claim reason"
+                  required></textarea>
+
+        <button type="submit">Submit Claim</button>
+
+    </form>
+
+</div>
 
 </body>
 </html>
