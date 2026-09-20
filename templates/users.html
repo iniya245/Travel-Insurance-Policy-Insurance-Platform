@@ -2,32 +2,99 @@
 <html>
 <head>
     <title>All Users</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            padding: 50px 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 90%;
+            max-width: 900px;
+            margin: auto;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.95);
+            color: #222;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        th {
+            background: #5b2c83;
+            color: white;
+            padding: 15px;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f3e8ff;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 22px;
+            background: #ffd166;
+            color: #222;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .back:hover {
+            background: white;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>All Registered Users</h2>
+<div class="container">
 
-<table border="1">
-<tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Phone</th>
-</tr>
+    <h1>👥 All Registered Users</h1>
 
-{% for user in users %}
-<tr>
-    <td>{{ user[0] }}</td>
-    <td>{{ user[1] }}</td>
-    <td>{{ user[2] }}</td>
-    <td>{{ user[3] }}</td>
-</tr>
-{% endfor %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
 
-</table>
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>{{ user[3] }}</td>
+        </tr>
+        {% endfor %}
 
-<br>
-<a href="/admin_dashboard">Back to Admin Dashboard</a>
+    </table>
+
+    <a class="back" href="/admin_dashboard">
+        ← Back to Admin Dashboard
+    </a>
+
+</div>
 
 </body>
 </html>

@@ -1,23 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Travel Sync - Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .login-box {
+            width: 380px;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #5a4fcf;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .register {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .register a {
+            color: #667eea;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>User Login</h2>
+    <div class="login-box">
 
-<form method="POST">
+        <div class="logo">✈️</div>
 
-Email:<br>
-<input type="email" name="email"><br><br>
+        <h2>Travel Sync Login</h2>
 
-Password:<br>
-<input type="password" name="password"><br><br>
+        <form action="/login" method="POST">
 
-<input type="submit" value="Login">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your email" required>
 
-</form>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+
+            <input type="submit" value="Login">
+
+        </form>
+
+        <div class="register">
+            Don't have an account?
+            <a href="/register">Register</a>
+        </div>
+
+    </div>
 
 </body>
 </html>

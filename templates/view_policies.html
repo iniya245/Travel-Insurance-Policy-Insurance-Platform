@@ -1,34 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View Policies</title>
+    <title>Travel Sync - My Policies</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #43cea2, #185a9d, #764ba2);
+        }
+
+        .box {
+            max-width: 900px;
+            margin: auto;
+            padding: 35px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 22px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        h2 {
+            text-align: center;
+            color: #185a9d;
+            margin-bottom: 30px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(90deg, #43cea2, #185a9d);
+            color: white;
+            padding: 15px;
+        }
+
+        td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f0f8ff;
+        }
+
+        .back {
+            display: block;
+            width: fit-content;
+            margin: 25px auto 0;
+            padding: 12px 25px;
+            background: #185a9d;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>My Travel Policies</h2>
+    <div class="box">
 
-<table border="1">
-<tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Destination</th>
-    <th>Travel Date</th>
-</tr>
+        <h2>📋 My Travel Policies</h2>
 
-{% for p in policies %}
-<tr>
-    <td>{{ p[0] }}</td>
-    <td>{{ p[1] }}</td>
-    <td>{{ p[2] }}</td>
-    <td>{{ p[3] }}</td>
-</tr>
-{% endfor %}
+        <div class="table-container">
 
-</table>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Destination</th>
+                    <th>Travel Date</th>
+                </tr>
 
-<br>
+                {% for p in policies %}
+                <tr>
+                    <td>{{ p[0] }}</td>
+                    <td>{{ p[1] }}</td>
+                    <td>{{ p[2] }}</td>
+                    <td>{{ p[3] }}</td>
+                </tr>
+                {% endfor %}
 
-<a href="/dashboard">Back to Dashboard</a>
+            </table>
+
+        </div>
+
+        <a class="back" href="/dashboard">← Back to Dashboard</a>
+
+    </div>
 
 </body>
 </html>

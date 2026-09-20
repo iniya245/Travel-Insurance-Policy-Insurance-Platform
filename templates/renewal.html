@@ -1,23 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Policy Renewal</title>
+    <title>Travel Sync - Policy Renewal</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #00b09b, #96c93d, #00c6ff);
+        }
+
+        .box {
+            width: 430px;
+            padding: 45px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .icon {
+            text-align: center;
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #159957;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 22px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #00b09b;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(90deg, #00b09b, #96c93d);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #159957;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
 
-<h2>Renew Your Travel Policy</h2>
+    <div class="box">
 
-<form action="/renewal" method="post">
+        <div class="icon">🔄✈️</div>
 
-<label>Policy ID:</label>
-<input type="text" name="policy_id" required>
+        <h2>Policy Renewal</h2>
 
-<br><br>
+        <form action="/renewal" method="POST">
 
-<button type="submit">Renew Policy</button>
+            <label>Policy ID</label>
 
-</form>
+            <input
+                type="text"
+                name="policy_id"
+                placeholder="Enter your Policy ID"
+                required
+            >
+
+            <button type="submit">
+                Renew Policy
+            </button>
+
+        </form>
+
+        <a class="back" href="/dashboard">
+            ← Back to Dashboard
+        </a>
+
+    </div>
 
 </body>
 </html>

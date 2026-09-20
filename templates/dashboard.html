@@ -1,21 +1,133 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Travel Sync - Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            color: white;
+        }
+
+        .header {
+            text-align: center;
+            padding: 45px 20px 30px;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.18);
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card .icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin-bottom: 18px;
+        }
+
+        .card a {
+            display: inline-block;
+            text-decoration: none;
+            background: white;
+            color: #6741d9;
+            padding: 11px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .logout {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .logout a {
+            color: white;
+            text-decoration: none;
+            border: 2px solid white;
+            padding: 12px 28px;
+            border-radius: 25px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Travel Insurance Dashboard</h1>
+    <div class="header">
+        <h1>✈️ TRAVEL SYNC DASHBOARD</h1>
+        <p>Welcome to your Travel Insurance Dashboard</p>
+    </div>
 
-<h2>Welcome to Travel Insurance Policy Issuance Platform</h2>
+    <div class="container">
 
-<ul>
-    <li><a href="/apply_policy">Apply for New Policy</a></li>
-    <li><a href="/view_policies">View My Policies</a></li>
-    <a href="/claim">Claim Insurance</a>
-    <a href="/renewal">Policy Renewal</a>
-    <a href="/logout">Logout</a>
-</ul>
+        <div class="cards">
+
+            <div class="card">
+                <div class="icon">🛡️</div>
+                <h3>New Policy</h3>
+                <a href="/apply_policy">Apply Now</a>
+            </div>
+
+            <div class="card">
+                <div class="icon">📋</div>
+                <h3>My Policies</h3>
+                <a href="/view_policies">View Policies</a>
+            </div>
+
+            <div class="card">
+                <div class="icon">🚨</div>
+                <h3>Insurance Claim</h3>
+                <a href="/claim">Make Claim</a>
+            </div>
+
+            <div class="card">
+                <div class="icon">🔄</div>
+                <h3>Policy Renewal</h3>
+                <a href="/renewal">Renew Policy</a>
+            </div>
+
+        </div>
+
+        <div class="logout">
+            <a href="/logout">Logout</a>
+        </div>
+
+    </div>
 
 </body>
 </html>

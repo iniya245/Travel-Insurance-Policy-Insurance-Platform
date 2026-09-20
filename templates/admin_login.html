@@ -1,28 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Login</title>
+    <title>Travel Sync - Admin Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #141e30, #243b55, #6a11cb);
+        }
+
+        .box {
+            width: 400px;
+            padding: 40px;
+            background: rgba(255,255,255,0.96);
+            border-radius: 22px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .icon {
+            text-align: center;
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #243b55;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #444;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #6a11cb;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(90deg, #243b55, #6a11cb);
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
 
-<h2>Admin Login</h2>
+    <div class="box">
 
-<form action="/admin_login" method="post">
+        <div class="icon">🔐</div>
 
-<label>Username:</label>
-<input type="text" name="username" required>
+        <h2>Admin Login</h2>
 
-<br><br>
+        <form action="/admin_login" method="post">
 
-<label>Password:</label>
-<input type="password" name="password" required>
+            <label>Username</label>
+            <input type="text" name="username" required>
 
-<br><br>
+            <label>Password</label>
+            <input type="password" name="password" required>
 
-<button type="submit">Login</button>
+            <button type="submit">Login</button>
 
-</form>
+        </form>
+
+    </div>
 
 </body>
 </html>

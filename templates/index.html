@@ -1,20 +1,149 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Travel Insurance</title>
+    <title>Travel Sync - Travel Insurance</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .nav-buttons a {
+            text-decoration: none;
+            color: white;
+            margin-left: 15px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid white;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 35px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 15px 30px;
+            margin: 8px;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+
+        .login {
+            background: white;
+            color: #667eea;
+        }
+
+        .register {
+            background: #ffcc70;
+            color: #333;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.15);
+            padding: 25px;
+            width: 220px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>Travel Insurance Policy Issuance Platform</h1>
+    <div class="navbar">
+        <div class="logo">✈️ Travel Sync</div>
 
-    <h2>Welcome!</h2>
+        <div class="nav-buttons">
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        </div>
+    </div>
 
-    <p>Protect your journey with travel insurance.</p>
+    <div class="hero">
+        <h1>Travel Without Worries</h1>
 
-    <a href="/login">Login</a>
-    <br><br>
+        <p>
+            Protect your journey with simple and reliable travel insurance.
+        </p>
 
-    <a href="/register">Register</a>
+        <a href="/login" class="btn login">Login</a>
+        <a href="/register" class="btn register">Get Started</a>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>🛡️ Protection</h3>
+            <p>Stay protected during your journey.</p>
+        </div>
+
+        <div class="card">
+            <h3>🌍 Travel</h3>
+            <p>Travel confidently to your destination.</p>
+        </div>
+
+        <div class="card">
+            <h3>⚡ Easy Process</h3>
+            <p>Apply and manage your policy easily.</p>
+        </div>
+
+    </div>
+
+    <footer>
+        © 2026 Travel Sync | Travel Insurance Platform
+    </footer>
 
 </body>
 </html>
