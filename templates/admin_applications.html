@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Applications</title>
+</head>
+
+<body>
+
+    <h2>Insurance Applications</h2>
+
+    {% if applications %}
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>Plan</th>
+            <th>Coverage</th>
+            <th>Premium</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.id }}</td>
+            <td>{{ application.user_name }}</td>
+            <td>{{ application.user_email }}</td>
+            <td>{{ application.plan_name }}</td>
+            <td>₹{{ application.coverage }}</td>
+            <td>₹{{ application.premium }}</td>
+            <td>{{ application.status }}</td>
+
+            <td>
+                {% if application.status == "Pending" %}
+                    <a href="/admin/application/{{ application.id }}/approve">
+                        Approve
+                    </a>
+                    |
+                    <a href="/admin/application/{{ application.id }}/reject">
+                        Reject
+                    </a>
+                {% else %}
+                    Completed
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <p>No applications found.</p>
+
+    {% endif %}
+
+    <br>
+
+    <a href="/admin_dashboard">← Back to Admin Dashboard</a>
+
+</body>
+</html>

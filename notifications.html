@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel Sync - Notifications</title>
+</head>
+
+<body>
+
+    <h2>Notifications</h2>
+
+    {% if notifications %}
+
+        {% for notification in notifications %}
+
+            <div style="
+                padding:15px;
+                margin:10px;
+                border:1px solid #ddd;
+                border-radius:10px;
+            ">
+                <b>{{ notification.message }}</b>
+                <br>
+                <small>{{ notification.created_at }}</small>
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No notifications available.</p>
+
+    {% endif %}
+
+    <br>
+
+    <a href="/dashboard">← Back to Dashboard</a>
+
+</body>
+</html>
