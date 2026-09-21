@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, url_for, session, render_template_string
 import sqlite3
+import uuid
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -11,9 +12,12 @@ DATABASE = "travel_insurance.db"
 
 # ================= DATABASE =================
 
+
+
 def get_db():
-    conn = sqlite3.connect(DATABASE)
+    conn = sqlite3.connect(DATABASE, timeout=30)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA busy_timeout = 30000")
     return conn
 
 
@@ -21,6 +25,7 @@ def init_db():
     conn = get_db()
     cur = conn.cursor()
 
+    # USERS TABLE
     cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,10 +36,13 @@ def init_db():
         )
     """)
 
+    # POLICIES TABLE
     cur.execute("""
         CREATE TABLE IF NOT EXISTS policies (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            policy_number TEXT DEFAULT '',
             user_id INTEGER NOT NULL,
+            plan_id INTEGER DEFAULT 1,
             name TEXT NOT NULL,
             destination TEXT NOT NULL,
             travel_date TEXT NOT NULL,
@@ -44,6 +52,7 @@ def init_db():
         )
     """)
 
+    # CLAIMS TABLE
     cur.execute("""
         CREATE TABLE IF NOT EXISTS claims (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,6 +67,7 @@ def init_db():
         )
     """)
 
+    # RENEWALS TABLE
     cur.execute("""
         CREATE TABLE IF NOT EXISTS renewals (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,23 +80,52 @@ def init_db():
         )
     """)
 
-    # Add missing columns if old database exists
-    columns = [row["name"] for row in cur.execute(
-        "PRAGMA table_info(policies)"
-    ).fetchall()]
+    # CHECK EXISTING COLUMNS
 
-    if "policy_amount" not in columns:
-        cur.execute(
-            "ALTER TABLE policies ADD COLUMN policy_amount REAL DEFAULT 0"
-        )
+    def add_column_if_missing(table, column, definition):
+        columns = [
+            row["name"] for row in cur.execute(
+                f"PRAGMA table_info({table})"
+            ).fetchall()
+        ]
 
-    if "status" not in columns:
-        cur.execute(
-            "ALTER TABLE policies ADD COLUMN status TEXT DEFAULT 'Active'"
-        )
+        if column not in columns:
+            cur.execute(
+                f"ALTER TABLE {table} ADD COLUMN {column} {definition}"
+            )
+
+    # POLICIES MIGRATION
+    add_column_if_missing(
+        "policies", "policy_number", "TEXT DEFAULT ''"
+    )
+
+    add_column_if_missing(
+        "policies", "plan_id", "INTEGER DEFAULT 1"
+    )
+
+    add_column_if_missing(
+        "policies", "policy_amount", "REAL DEFAULT 0"
+    )
+
+    add_column_if_missing(
+        "policies", "status", "TEXT DEFAULT 'Active'"
+    )
+
+    # CLAIMS MIGRATION
+    add_column_if_missing(
+        "claims", "user_id", "INTEGER DEFAULT 0"
+    )
+
+    # RENEWALS MIGRATION
+    add_column_if_missing(
+        "renewals", "user_id", "INTEGER DEFAULT 0"
+    )
 
     conn.commit()
     conn.close()
+
+
+
 
 
 # ================= DESIGN =================
@@ -522,7 +561,8 @@ def apply_policy():
         destination = request.form.get("destination", "").strip()
         travel_date = request.form.get("travel_date", "").strip()
         policy_amount = request.form.get("policy_amount", "").strip()
-
+        policy_number = "POL-" + uuid.uuid4().hex[:8].upper()
+        plan_id=1
         if not name or not destination or not travel_date or not policy_amount:
 
             message = """
@@ -542,25 +582,28 @@ def apply_policy():
                 conn = get_db()
 
                 cur = conn.execute("""
-                    INSERT INTO policies
-                    (
-                        user_id,
-                        name,
-                        destination,
-                        travel_date,
-                        policy_amount,
-                        status
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?)
-                """, (
-                    session["user_id"],
-                    name,
-                    destination,
-                    travel_date,
-                    amount,
-                    "Active"
-                ))
-
+    INSERT INTO policies
+    (
+        policy_number,
+        user_id,
+        plan_id,
+        name,
+        destination,
+        travel_date,
+        policy_amount,
+        status
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+""", (
+    policy_number,
+    session["user_id"],
+    plan_id,
+    name,
+    destination,
+    travel_date,
+    amount,
+    "Active"
+))
                 policy_id = cur.lastrowid
 
                 conn.commit()
@@ -1003,7 +1046,6 @@ def renewal():
     """, (session["user_id"],)).fetchall()
 
     conn.close()
-
     if request.method == "POST":
 
         policy_id = request.form.get("policy_id", "").strip()
@@ -1065,10 +1107,10 @@ def renewal():
                     UPDATE policies
                     SET status = ?
                     WHERE id = ?
-                """, (
-                    "Renewed",
-                    policy["id"]
-                ))
+                """, ("Renewed",
+                                    policy["id"]
+                                ))
+                    
 
                 conn.commit()
                 conn.close()
@@ -1205,8 +1247,10 @@ def logout():
 
 if __name__ == "__main__":
 
+    
     init_db()
 
+if __name__ == "__main__":
     app.run(
         debug=True,
         host="0.0.0.0",
