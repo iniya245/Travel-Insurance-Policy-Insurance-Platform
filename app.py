@@ -537,12 +537,14 @@ def dashboard():
         <a class="btn" href="/renewal">
             Policy Renewal
         </a>
+        <a class="btn" href="/admin">
+    Database Admin Dashboard
+</a>
 
     </div>
     """
 
     return page("Dashboard", content)
-
 
 # ================= APPLY POLICY =================
 
@@ -1242,15 +1244,256 @@ def logout():
 
     return redirect(url_for("home"))
 
+# ================= DELETE USER =================
 
+@app.route("/admin/delete_user/<int:user_id>", methods=["POST"])
+def delete_user(user_id):
+
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    conn = get_db()
+
+    try:
+        user = conn.execute(
+            "SELECT id FROM users WHERE id = ?",
+            (user_id,)
+        ).fetchone()
+
+        if user is None:
+            return "User not found", 404
+
+        policy = conn.execute(
+            "SELECT id FROM policies WHERE user_id = ? LIMIT 1",
+            (user_id,)
+        ).fetchone()
+
+        claim = conn.execute(
+            "SELECT id FROM claims WHERE user_id = ? LIMIT 1",
+            (user_id,)
+        ).fetchone()
+
+        if policy or claim:
+            return (
+                "Cannot delete this user because related policy or claim "
+                "records exist. No data was deleted. "
+                '<a href="/admin/users">Back to All Users</a>'
+            )
+
+        conn.execute(
+            "DELETE FROM users WHERE id = ?",
+            (user_id,)
+        )
+
+        conn.commit()
+
+    finally:
+        conn.close()
+
+    return redirect(url_for("admin_records", record_type="users"))
 # ================= RUN =================
 
 if __name__ == "__main__":
 
     
     init_db()
+# ================= ADMIN DASHBOARD =================
+
+@app.route("/admin")
+def admin_dashboard():
+
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    conn = get_db()
+
+    total_users = conn.execute(
+        "SELECT COUNT(*) FROM users"
+    ).fetchone()[0]
+
+    total_policies = conn.execute(
+        "SELECT COUNT(*) FROM policies"
+    ).fetchone()[0]
+
+    total_claims = conn.execute(
+        "SELECT COUNT(*) FROM claims"
+    ).fetchone()[0]
+
+    total_renewals = conn.execute(
+        "SELECT COUNT(*) FROM renewals"
+    ).fetchone()[0]
+
+    conn.close()
+
+    content = f"""
+    <div class="card center">
+        <h1>Database Admin Dashboard</h1>
+        <p>View records stored in the SQLite database.</p>
+
+        <div class="detail-box">
+            <h3>Total Users: {total_users}</h3>
+            <h3>Total Policies: {total_policies}</h3>
+            <h3>Total Claims: {total_claims}</h3>
+            <h3>Total Renewals: {total_renewals}</h3>
+        </div>
+
+        <a class="btn" href="/admin/users">All Users</a>
+        <a class="btn" href="/admin/policies">All Policies</a>
+        <a class="btn" href="/admin/claims">All Claims</a>
+        <a class="btn" href="/admin/renewals">All Renewals</a>
+
+        <br><br>
+        <a class="btn" href="/dashboard">Back to Dashboard</a>
+    </div>
+    """
+
+    return page("Admin Dashboard", content)
+
+
+# ================= ADMIN DATABASE RECORDS =================
+
+@app.route("/admin/<record_type>", methods=["GET"])
+def admin_records(record_type):
+
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    tables = {
+        "users": {
+            "title": "All Registered Users",
+            "sql": """
+                SELECT id, name, email, phone
+                FROM users
+                ORDER BY id DESC
+            """,
+            "columns": ["ID", "Name", "Email", "Phone"],
+            "keys": ["id", "name", "email", "phone"]
+        },
+        "policies": {
+            "title": "All Policies",
+            "sql": """
+                SELECT id, policy_number, user_id, name,
+                       destination, travel_date, policy_amount, status
+                FROM policies
+                ORDER BY id DESC
+            """,
+            "columns": [
+                "ID", "Policy Number", "User ID", "Name",
+                "Destination", "Travel Date", "Amount", "Status"
+            ],
+            "keys": [
+                "id", "policy_number", "user_id", "name",
+                "destination", "travel_date", "policy_amount", "status"
+            ]
+        },
+        "claims": {
+            "title": "All Claims",
+            "sql": """
+                SELECT id, policy_id, user_id, claim_amount,
+                       reason, claim_date, status
+                FROM claims
+                ORDER BY id DESC
+            """,
+            "columns": [
+                "Claim ID", "Policy ID", "User ID",
+                "Amount", "Reason", "Claim Date", "Status"
+            ],
+            "keys": [
+                "id", "policy_id", "user_id",
+                "claim_amount", "reason", "claim_date", "status"
+            ]
+        },
+        "renewals": {
+            "title": "All Renewals",
+            "sql": """
+                SELECT id, policy_id, user_id, renewal_date, status
+                FROM renewals
+                ORDER BY id DESC
+            """,
+            "columns": [
+                "Renewal ID", "Policy ID", "User ID",
+                "Renewal Date", "Status"
+            ],
+            "keys": [
+                "id", "policy_id", "user_id", "renewal_date", "status"
+            ]
+        }
+    }
+
+    if record_type not in tables:
+        return redirect(url_for("admin_dashboard"))
+
+    config = tables[record_type]
+
+    conn = get_db()
+    records = conn.execute(config["sql"]).fetchall()
+    conn.close()
+
+    headers = "".join(
+        f"<th>{column}</th>" for column in config["columns"]
+    )
+
+    if record_type == "users":
+        headers += "<th>Action</th>"
+
+    rows = ""
+
+    for record in records:
+        cells = ""
+
+        for key in config["keys"]:
+            value = record[key]
+
+            if key in ("policy_amount", "claim_amount"):
+                value = f"₹{float(value or 0):.2f}"
+
+            cells += f"<td>{value if value is not None else ''}</td>"
+
+        if record_type == "users":
+            cells += f"""
+                <td>
+                    <form method="POST"
+                          action="/admin/delete_user/{record['id']}"
+                          onsubmit="return confirm('Are you sure you want to delete this user?');">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            """
+
+        rows += f"<tr>{cells}</tr>"
+
+    if not rows:
+        rows = (
+            f'<tr><td colspan="{len(config["columns"]) + (1 if record_type == "users" else 0)}">'
+            'No records found in the database.'
+            '</td></tr>'
+        )
+
+    content = f"""
+    <div class="card">
+        <h1>{config["title"]}</h1>
+
+        <p>Total records: {len(records)}</p>
+
+        <div style="overflow-x:auto;">
+            <table>
+                <tr>{headers}</tr>
+                {rows}
+            </table>
+        </div>
+
+        <br>
+        <a class="btn" href="/admin">Back to Admin Dashboard</a>
+    </div>
+    """
+
+    return page(config["title"], content)
+
+
+# ================= RUN =================
 
 if __name__ == "__main__":
+    init_db()
     app.run(
         debug=True,
         host="0.0.0.0",
